@@ -72,7 +72,7 @@ void Scene_Menu::CreateCommandWindow() {
 	// Create Options Window
 	std::vector<std::string> options;
 
-	if (Player::IsRPG2k()) {
+	if (Player::IsRPG2k() && !lcf::Data::system.easyrpg_rpg2003_menu) {
 		command_options.push_back(Item);
 		command_options.push_back(Skill);
 		command_options.push_back(Equipment);
@@ -84,7 +84,10 @@ void Scene_Menu::CreateCommandWindow() {
 	} else {
 		for (std::vector<int16_t>::iterator it = lcf::Data::system.menu_commands.begin();
 			it != lcf::Data::system.menu_commands.end(); ++it) {
-				command_options.push_back((CommandOptionType)*it);
+				CommandOptionType option = (CommandOptionType)*it;
+				if (Player::IsRPG2k3() || (option != Row && option != Wait)) {
+					command_options.push_back(option);
+				}
 		}
 		if (Player::debug_flag) {
 			command_options.push_back(Debug);
