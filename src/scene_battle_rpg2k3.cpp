@@ -2482,7 +2482,7 @@ Scene_Battle_Rpg2k3::BattleActionReturn Scene_Battle_Rpg2k3::ProcessBattleAction
 
 	// Emulates an RPG_RT bug where damage which is reversed into healing due to negative attributes is applied twice.
 	// The displayed numbers are normal, but the actual effect is doubled.
-	if (!action->IsPositive() && !was_absorb_hp && action->IsAffectHp() && action->GetAffectedHp() > 0) {
+	if (!action->IsPositive() && !was_absorb_hp && action->IsAffectHp() && action->GetAffectedHp() > 0 && !lcf::Data::system.easyrpg_fix_double_negative_effect_bug) {
 		action->ApplyHpEffect();
 	}
 
