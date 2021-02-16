@@ -257,7 +257,7 @@ int CalcSelfDestructEffect(const Game_Battler& source,
 
 int CalcSkillCost(const lcf::rpg::Skill& skill, int max_sp, bool half_sp_cost) {
 	const auto div = half_sp_cost ? 2 : 1;
-	return (Player::IsRPG2k3() && skill.sp_type == lcf::rpg::Skill::SpType_percent)
+	return ((Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) && skill.sp_type == lcf::rpg::Skill::SpType_percent)
 		? max_sp * skill.sp_percent / 100 / div
 		: (skill.sp_cost + static_cast<int>(half_sp_cost)) / div;
 }

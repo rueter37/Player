@@ -657,7 +657,7 @@ bool Game_BattleAlgorithm::Normal::vExecute() {
 	// Conditions caused / healed by weapon.
 	if (source.GetType() == Game_Battler::Type_Ally) {
 		auto& ally = static_cast<Game_Actor&>(source);
-		const bool is2k3 = Player::IsRPG2k3();
+		const bool is2k3 = Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features;
 		auto weapons = ally.GetWeapons(weapon);
 
 		if (weapons[0]) {
@@ -1002,7 +1002,7 @@ bool Game_BattleAlgorithm::Skill::vExecute() {
 		}
 	}
 
-	bool heals_states = IsPositive() ^ (Player::IsRPG2k3() && skill.reverse_state_effect);
+	bool heals_states = IsPositive() ^ ((Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) && skill.reverse_state_effect);
 	bool affected_death = false;
 	int to_hit_states = (skill.easyrpg_state_hit != -1 ? skill.easyrpg_state_hit : to_hit);
 	for (int i = 0; i < static_cast<int>(skill.state_effects.size()); i++) {

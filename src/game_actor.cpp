@@ -640,7 +640,7 @@ int Game_Actor::GetStateProbability(int state_id) const {
 	for (const auto equipment : GetWholeEquipment()) {
 		lcf::rpg::Item* item = lcf::ReaderUtil::GetElement(lcf::Data::items, equipment);
 		if (item != nullptr
-				&& !(Player::IsRPG2k3() && item->reverse_state_effect)
+				&& !((Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) && item->reverse_state_effect)
 				&& (item->type == lcf::rpg::Item::Type_shield || item->type == lcf::rpg::Item::Type_armor
 			|| item->type == lcf::rpg::Item::Type_helmet || item->type == lcf::rpg::Item::Type_accessory)
 			&& state_id  <= static_cast<int>(item->state_set.size()) && item->state_set[state_id - 1]) {
@@ -828,10 +828,12 @@ bool Game_Actor::IsEquipmentFixed() const {
 		return true;
 	}
 
-	for (auto state_id: GetInflictedStates()) {
-		auto* state = lcf::ReaderUtil::GetElement(lcf::Data::states, state_id);
-		if (state && state->cursed) {
-			return true;
+	if (Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) {
+		for (auto state_id: GetInflictedStates()) {
+			auto* state = lcf::ReaderUtil::GetElement(lcf::Data::states, state_id);
+			if (state && state->cursed) {
+				return true;
+			}
 		}
 	}
 	return false;
@@ -1408,7 +1410,7 @@ int Game_Actor::CalculateWeaponSpCost(Weapon weapon) const {
 
 void Game_Actor::AdjustEquipmentStates(const lcf::rpg::Item* item, bool add, bool allow_battle_states) {
 	// All states inflicted by new armor get inflicted.
-	if (Player::IsRPG2k3()
+	if ((Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features)
 			&& item
 			&& IsArmorType(item)
 			&& item->reverse_state_effect)
@@ -1436,7 +1438,7 @@ void Game_Actor::ResetEquipmentStates(bool allow_battle_states) {
 
 PermanentStates Game_Actor::GetPermanentStates() const {
 	PermanentStates ps;
-	if (!Player::IsRPG2k3()) {
+	if (!Player::IsRPG2k3() && !lcf::Data::system.easyrpg_enable_certain_rpg2003_features) {
 		return ps;
 	}
 

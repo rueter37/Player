@@ -18,6 +18,7 @@
 // Headers
 #include <iomanip>
 #include <sstream>
+#include "player.h"
 #include "window_item.h"
 #include "game_party.h"
 #include "bitmap.h"
@@ -71,7 +72,7 @@ void Window_Item::Refresh() {
 		}
 	}
 
-	if (Game_Battle::IsBattleRunning()) {
+	if ((Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) && Game_Battle::IsBattleRunning()) {
 		// Include equipped accessories that invoke skills in sorted order.
 		if (actor) {
 			for (int i = 1; i <= 5; ++i) {

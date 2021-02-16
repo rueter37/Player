@@ -100,7 +100,7 @@ int ApplyAttributeMultiplier(int effect, const Game_Battler& target, Span<const 
 	}
 
 	// Negative attributes not supported in 2k.
-	auto limit = Player::IsRPG2k() ? -1 : INT_MIN;
+	auto limit = (Player::IsRPG2k() && !lcf::Data::system.easyrpg_enable_certain_rpg2003_features) ? -1 : INT_MIN;
 
 	if (physical > limit && magical > limit) {
 		if (physical >= 0 && magical >= 0) {

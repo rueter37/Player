@@ -20,6 +20,7 @@
 #include <array>
 #include <cassert>
 #include <cmath>
+#include "player.h"
 #include "system.h"
 #include "game_party.h"
 #include "game_actors.h"
@@ -280,7 +281,7 @@ bool Game_Party::IsItemUsable(int item_id, const Game_Actor* target) const {
 	const auto* skill = lcf::ReaderUtil::GetElement(lcf::Data::skills, item->skill_id);
 	const bool in_battle = Game_Battle::IsBattleRunning();
 
-	if (item->use_skill) {
+	if ((Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) && item->use_skill) {
 		// RPG_RT BUG: Does not check if skill is usable.
 		return skill &&
 			(in_battle

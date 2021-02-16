@@ -150,9 +150,11 @@ static bool CanRemoveEquipment(const Game_Actor& actor, int index) {
 	if (actor.IsEquipmentFixed()) {
 		return false;
 	}
-	auto* item = actor.GetEquipment(index + 1);
-	if (item && item->cursed) {
-		return false;
+	if (Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) {
+		auto* item = actor.GetEquipment(index + 1);
+		if (item && item->cursed) {
+			return false;
+		}
 	}
 	return true;
 }

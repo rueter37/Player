@@ -115,7 +115,7 @@ void Window_EquipStatus::DrawParameter(int cx, int cy, int type) {
 
 	// Check if 4 digits are needed instead of 3
 	int limit = lcf::Data::system.easyrpg_max_stat_base_value == -1 ? 999 : lcf::Data::system.easyrpg_max_stat_base_value;
-	bool more_space_needed = (Player::IsRPG2k3() && limit >= 500) || limit >= 1000;
+	bool more_space_needed = ((Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) && limit >= 500) || limit >= 1000;
 
 	// Draw Term
 	contents->TextDraw(cx, cy, 1, name);

@@ -68,10 +68,12 @@ PermanentStates Game_Battler::GetPermanentStates() const {
 }
 
 bool Game_Battler::EvadesAllPhysicalAttacks() const {
-	for (auto state_id: GetInflictedStates()) {
-		auto* state = lcf::ReaderUtil::GetElement(lcf::Data::states, state_id);
-		if (state && state->avoid_attacks) {
-			return true;
+	if (Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) {
+		for (auto state_id: GetInflictedStates()) {
+			auto* state = lcf::ReaderUtil::GetElement(lcf::Data::states, state_id);
+			if (state && state->avoid_attacks) {
+				return true;
+			}
 		}
 	}
 	return false;
@@ -505,12 +507,13 @@ static int AdjustParam(int base, int mod, int maxval, Span<const int16_t> states
 	auto value = Utils::Clamp(base + mod, 1, maxval);
 	bool half = false;
 	bool dbl = false;
+	bool rpg2k3 = Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features;
 	for (auto i: states) {
 		const auto* state = lcf::ReaderUtil::GetElement(lcf::Data::states, i);
 		assert(state);
 		if (state->*adj) {
 			half |= (state->affect_type == lcf::rpg::State::AffectType_half);
-			dbl |= (state->affect_type == lcf::rpg::State::AffectType_double);
+			if (rpg2k3) dbl |= (state->affect_type == lcf::rpg::State::AffectType_double);
 		}
 	}
 	if (dbl != half) {
@@ -604,10 +607,12 @@ std::vector<int16_t> Game_Battler::BattleStateHeal() {
 }
 
 bool Game_Battler::HasReflectState() const {
-	for (int16_t i : GetInflictedStates()) {
-		// States are guaranteed to be valid
-		if (lcf::ReaderUtil::GetElement(lcf::Data::states, i)->reflect_magic) {
-			return true;
+	if (Player::IsRPG2k3() || lcf::Data::system.easyrpg_enable_certain_rpg2003_features) {
+		for (int16_t i : GetInflictedStates()) {
+			// States are guaranteed to be valid
+			if (lcf::ReaderUtil::GetElement(lcf::Data::states, i)->reflect_magic) {
+				return true;
+			}
 		}
 	}
 
